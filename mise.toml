@@ -1,0 +1,42 @@
+[env]
+MISE_TASK_TIMINGS = 1
+BASE_DIR = "{{ config_root }}"
+PROJECT_DIR = "{{ env.BASE_DIR }}"
+
+[tasks."reset:local"]
+description = "Clean and setup everything again."
+run = ["mise run setup", "mix run priv/repo/seeds.exs"]
+
+[tasks.setup]
+description = "Install dependencies and setup project"
+run = [ "mise run install:lang:elixir", "mise reset:db",  "mix setup"]
+
+[tasks."init:db"]
+description = "Create the database."
+run = [
+  "mkdir -p $PGDATA",
+  "devbox services start postgresql",
+  "initdb -U $POSTGRES_USER -D $PGDATA",
+  "mix setup",
+]
+
+[tasks."install:lang:elixir"]
+description = "Install Elixir, hex and rebar."
+run = [
+  "mise install elixir",
+  "mix local.hex --force",
+  "mix local.rebar --force",
+  "mix deps.get",
+]
+
+[tasks."destroy:db"]
+description = "Remove the database and its data folder."
+run = "rm -rf $PGDATA/*"
+
+[tasks."reset:db"]
+description = "Remove and initialize the database."
+run = [
+  "devbox services stop postgresql || true",
+  "mise run destroy:db",
+  "mise run init:db"
+]
