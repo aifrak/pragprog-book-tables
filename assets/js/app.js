@@ -26,12 +26,17 @@ import { Socket } from "phoenix";
 import { LiveSocket } from "phoenix_live_view";
 import topbar from "../vendor/topbar";
 
+import InfinityScroll from "./infinity-scroll";
+import PingPongHook from "./ping-pong-hook";
+
 // The below line isn't mentioned in the book but needed in Chapter 5
 // import InfinityScroll from "./infinity-scroll";
 
 let Hooks = {};
 // The below line isn't mentioned in the book but needed in Chapter 5
 // Hooks.InfinityScroll = InfinityScroll;
+Hooks.InfinityScroll = InfinityScroll;
+Hooks.PingPongHook = PingPongHook;
 
 let csrfToken = document
   .querySelector("meta[name='csrf-token']")

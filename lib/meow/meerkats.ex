@@ -55,6 +55,15 @@ defmodule Meow.Meerkats do
     %{meerkats: result, total_count: total_count}
   end
 
+  def meerkat_count(), do: Repo.aggregate(Meerkat, :count)
+
+  def list_meerkats_with_pagination(offset, limit) do
+    from(m in Meerkat)
+    |> limit(^limit)
+    |> offset(^offset)
+    |> Repo.all()
+  end
+
   defp paginate(query, %{page: page, page_size: page_size})
        when is_integer(page) and is_integer(page_size) do
     offset = max(page - 1, 0) * page_size
